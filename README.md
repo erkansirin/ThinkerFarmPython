@@ -1,9 +1,9 @@
-###ThinkerFarmPython V1.0
+###ThinkerFarmPython V1.0 
 
-##Introduction
-This repository contains codes that i used in my previous projects. I gather them together as re-usable python modules in case i needed in the future.
+##Introduction 
+This repository contains codes that i used in my previous projects. I gather them together as re-usable python modules in case i needed in the future. 
 
-##Hardware
+##Hardware 
 This project developed on Intel Neural Stick 2 (Myriad™ X) and Raspberry Pi 3 B+ Raspbian OS is 32bit, Nvidia Jetson Nano, Intel Up developer kit and for Laptop and Desktop computers if your CPU have AVX instructions (Advanced Vector Extensions) you will get pretty much decent performance in every module. Most of modules are supports GPU by default.
 
 ##Features
