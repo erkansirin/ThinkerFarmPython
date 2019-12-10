@@ -2,7 +2,7 @@
 #
 #
 # Author Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 # ssd_caffe.py contains MobileNet network and runnder for the network in real-time
 
@@ -15,7 +15,7 @@ from PIL import Image
 from PIL import ImageTk
 import numpy as np
 import time
-from db.db import db
+from db.person_db import person_db
 
 class empty_video_loop:
 

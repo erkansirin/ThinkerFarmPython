@@ -2,7 +2,7 @@
 #
 #
 # Author Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 # init_ui.py contains main inits to trigger ui codes
 

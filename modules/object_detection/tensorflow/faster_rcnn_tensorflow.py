@@ -2,7 +2,7 @@
 #
 #
 # Author Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 # faster_rcnn_tensorflow.py contains dnn
 # implementation of tensorflow object detection network
@@ -16,7 +16,7 @@ from PIL import Image
 from PIL import ImageTk
 import numpy as np
 import time
-from db.db import db
+from db.person_db import person_db
 
 class faster_rcnn_tensorflow:
 
@@ -29,15 +29,14 @@ def load_faster_rcnn_tensorflow_network(self):
     self.pb.pack(expand=True, fill=tki.BOTH, padx=[200,0])
     self.pb.start()
 
-    print("AI Edge : Loading Faster RCNNensorflow Network")
+    print("ThinkerFarm : Loading Faster RCNNensorflow Network")
     self.T.delete("1.0", tki.END)
-    self.T.insert("1.0","AI Edge : Loading Faster RCNNensorflow Network")
+    self.T.insert("1.0","ThinkerFarm : Loading Faster RCNN TensorFlow Network")
 
-    pbtxtPath = os.path.sep.join([self.root_path,"/models/object_detection/tensorflow", "model.pbtxt"])
-    pbPath = os.path.sep.join([self.root_path,"/models/object_detection/tensorflow",
-        "frozen_inference_graph.pb"])
+    pbtxtPath = "models/object_detection/tensorflow/faster_rcnn_inception_v2_coco_2018_01_28.pbtxt"
+    pbPath = "models/object_detection/tensorflow/faster_rcnn_inception_v2_coco_2018_01_28.pb"
 
-    labelsPathCaffe  = os.path.sep.join([self.root_path,"/models/object_detection/tensorflow", "faster_rcnn_inception_v2_coco_2018_01_28.names"])
+    labelsPathCaffe  = "models/object_detection/tensorflow/faster_rcnn_inception_v2_coco_2018_01_28.names"
     self.LABELSCaffe = open(labelsPathCaffe ).read().strip().split("\n")
     self.detector_frcnn_tensorflow = cv2.dnn.readNet(pbtxtPath , pbPath, 'tensorflow')
     if self.cpu_type == 1:
@@ -73,7 +72,7 @@ def run_faster_rcnn_tensorflow(self,frame):
     print("forward : ")
     if self.update_final_text == 0:
         self.T.delete("1.0", tki.END)
-        self.T.insert("1.0","System ready - AI Edge Face Module : detection with res10_300x300_ssd_iter_140000.caffemodel and Recognition with custom trained NN with  human dataset runing on OpenCV DNN")
+        self.T.insert("1.0","System ready - ThinkerFarm Face Module : detection with res10_300x300_ssd_iter_140000.caffemodel and Recognition with custom trained NN with human dataset runing on OpenCV DNN")
         self.update_final_text = 1
 
     cols = frame.shape[1]

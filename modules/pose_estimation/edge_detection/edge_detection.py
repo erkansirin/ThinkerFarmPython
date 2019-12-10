@@ -2,7 +2,7 @@
 #
 #
 # Author Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 # edge_detection.py uses pretrained caffe model EdgeNet to detect edge in real-time
 
@@ -18,7 +18,7 @@ from PIL import Image
 from PIL import ImageTk
 import numpy as np
 import time
-from db.db import db
+from db.person_db import person_db
 
 
 class edge_detection:
@@ -51,9 +51,8 @@ class CropLayer(object):
 
 def init_edge_network(self):
 
-    protoPathEdgeNet = os.path.sep.join([self.root_path,"models/edge", "deploy.prototxt"])
-    modelPathEdgeNet = os.path.sep.join([self.root_path,"models/edge",
-        "hed_pretrained_bsds.caffemodel"])
+    protoPathEdgeNet = "models/edge/deploy.prototxt"
+    modelPathEdgeNet = "models/edge/hed_pretrained_bsds.caffemodel"
 
     self.edgeNet = cv.dnn.readNet(protoPathEdgeNet, modelPathEdgeNet)
     if self.cpu_type == 1:
@@ -70,7 +69,7 @@ def init_edge_network(self):
     text = "Show me what you got :D"
 
     self.top_label_text.set(text)
-    img = tki.PhotoImage(file=os.path.sep.join([self.root_path, "ui/images/poseestima.png"]))
+    img = ImageTk.PhotoImage(Image.open("ui/images/poseestima.png"))
     self.panel_pass.configure(image=img)
     self.panel_pass.image = img
 
@@ -92,7 +91,7 @@ def run_edge_network(self,frame):
                                mean=(104.00698793, 116.66876762, 122.67891434),
                                swapRB=False, crop=False)
     self.edgeNet.setInput(inp)
-    print("edge net working")
+
 
     out = self.edgeNet.forward()
     #out = out[0, 0]

@@ -2,7 +2,7 @@
 #
 #
 # Author Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 # ssd_caffe.py contains MobileNet network and runnder for the network in real-time
 
@@ -15,7 +15,7 @@ from PIL import Image
 from PIL import ImageTk
 import numpy as np
 import time
-from db.db import db
+from db.person_db import person_db
 
 class ssd_caffe:
 
@@ -28,27 +28,21 @@ def load_mobilenet_caffe_network(self):
     self.pb.pack(expand=True, fill=tki.BOTH, padx=[200,0])
     self.pb.start()
 
-    print("AI Edge : Loading Caffe SSD Network")
+    print("ThinkerFarm : Loading Caffe SSD Network")
     self.T.delete("1.0", tki.END)
-    self.T.insert("1.0","AI Edge : Loading Caffe SSD Network")
+    self.T.insert("1.0","ThinkerFarm : Loading Caffe SSD Network")
 
-    protoPathCaffe = os.path.sep.join([self.root_path,"/models/object_detection/caffe", "MobileNetSSD_deploy.prototxt"])
-    modelPathCaffe = os.path.sep.join([self.root_path,"/models/object_detection/caffe",
-        "MobileNetSSD_deploy.caffemodel"])
+    protoPathCaffe = "models/object_detection/caffe/MobileNetSSD_deploy.prototxt"
+    modelPathCaffe = "models/object_detection/caffe/MobileNetSSD_deploy.caffemodel"
 
-    #deviceCuda = cv2.cuda.getCudaEnabledDeviceCount()
-    #print("device :",deviceCuda)
 
-    #cudadeviceset = cv2.cuda.setDevice(0)
-
-    labelsPathCaffe  = os.path.sep.join([self.root_path,"/models/object_detection/caffe", "caffe.names"])
+    labelsPathCaffe  = "models/object_detection/caffe/caffe.names"
     self.LABELSCaffe = open(labelsPathCaffe ).read().strip().split("\n")
     self.detectorCaffe = cv2.dnn.readNetFromCaffe(protoPathCaffe , modelPathCaffe )
     if self.cpu_type == 1:
         self.detectorCaffe.setPreferableTarget(cv2.dnn.DNN_TARGET_MYRIAD)
     if self.cpu_type == 2:
         self.detectorCaffe.setPreferableBackend(cv2.dnn.DNN_BACKEND_HALIDE)
-        #self.detectorCaffe.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
 
     np.random.seed(21)
     self.COLORS = np.random.randint(0, 255, size=(21, 3),
@@ -67,7 +61,7 @@ def run_mobilenet_caffe(self,frame):
     detections = self.detectorCaffe.forward()
     if self.update_final_text == 0:
         self.T.delete("1.0", tki.END)
-        self.T.insert("1.0","System ready - AI Edge Face Module : detection with res10_300x300_ssd_iter_140000.caffemodel and Recognition with custom trained NN with  human dataset runing on OpenCV DNN")
+        self.T.insert("1.0","System ready - ThinkerFarm Face Module : detection with res10_300x300_ssd_iter_140000.caffemodel and Recognition with custom trained NN with human dataset runing on OpenCV DNN")
         self.update_final_text = 1
 
     cols = frame.shape[1]

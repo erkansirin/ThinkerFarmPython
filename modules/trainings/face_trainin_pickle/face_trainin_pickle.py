@@ -2,7 +2,7 @@
 #
 #
 # Author by Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 # face_training_pickle.py extracts face embeddings from
 # humans dataset and train network with embbedings
@@ -19,16 +19,17 @@ import imutils
 import cv2
 import os
 from modules.face_recognition.face_pickle.face_pickle import *
-
+from modules.nn_utility import *
+from utilities.paths import *
 
 def extract_pickle_embeddings(self):
 
 	self.pb.pack(expand=True, fill=tki.BOTH, padx=[200,0])
 	self.pb.start()
 
-	print("AI Edge :  Init Face Detetctor")
-	print("AI Edge : quantifying faces")
-	imagePaths = list(paths.list_images(os.path.sep.join([self.root_path,"dataset/humans"])))
+	print("ThinkerFarm :  Init Face Detetctor")
+	print("ThinkerFarm : quantifying faces")
+	imagePaths = list(paths.list_images("dataset/humans"))
 
 	knownEmbeddings = []
 	knownNames = []
@@ -36,16 +37,22 @@ def extract_pickle_embeddings(self):
 	total = 0
 
 	self.top_label_text.set("Learning New Faces... =)")
-	img = tki.PhotoImage(file=os.path.sep.join([self.root_path, "ui/images/workingbusy.png"]))
+	img = ImageTk.PhotoImage(Image.open("ui/images/workingbusy.png"))
 	self.panel_pass.configure(image=img)
 	self.panel_pass.image = img
+
+	self.net_utility = nn_utility(self.cpu_type)
+	self.net_utility.setup_network(protoPath, modelPath,  "caffe")
+	self.net_embedder = nn_utility(self.cpu_type)
+	self.net_embedder.setup_network("", torch_model, "Torch")
+
 
 
 	for (i, imagePath) in enumerate(imagePaths):
 		name = imagePath.split(os.path.sep)[-2]
 
 		image = cv2.imread(imagePath)
-		labelText = "AI Edge : processing image {}/{} - Path : {}".format(i + 1,
+		labelText = "ThinkerFarm : processing image {}/{} - Path : {}".format(i + 1,
 			len(imagePaths),imagePath)
 
 		self.T.delete("1.0", tki.END)
@@ -58,8 +65,8 @@ def extract_pickle_embeddings(self):
 			cv2.resize(image, (300, 300)), 1.0, (300, 300),
 			(104.0, 177.0, 123.0), swapRB=False, crop=False)
 
-		self.detector.setInput(imageBlob)
-		detections = self.detector.forward()
+
+		detections = self.net_utility.nn_detector(imageBlob)
 
 		if len(detections) > 0:
 
@@ -78,18 +85,17 @@ def extract_pickle_embeddings(self):
 
 				faceBlob = cv2.dnn.blobFromImage(face, 1.0 / 255,
 					(96, 96), (0, 0, 0), swapRB=True, crop=False)
-				self.embedder.setInput(faceBlob)
-				vec = self.embedder.forward()
+
+				vec = self.net_embedder.nn_detector(faceBlob)
 
 				print("found name :",name)
 				knownNames.append(name)
 				knownEmbeddings.append(vec.flatten())
 				total += 1
 
-	print("AI Edge : serializing {} encodings...".format(total))
+	print("ThinkerFarm : serializing {} encodings...".format(total))
 	data = {"embeddings": knownEmbeddings, "names": knownNames}
-	f = open(os.path.sep.join([self.root_path,"/models/face_recognition_models",
-        "embeddings.pickle"]), "wb")
+	f = open("models/face_recognition_models/embeddings.pickle", "wb")
 	f.write(pickle.dumps(data))
 	f.close()
 	train_face_pickle(self)
@@ -97,13 +103,12 @@ def extract_pickle_embeddings(self):
 
 def train_face_pickle(self):
 
-	print("AI Edge :  Loading Face Details")
-	data = pickle.loads(open(os.path.sep.join([self.root_path,"/models/face_recognition_models",
-        "embeddings.pickle"]), "rb").read())
+	print("ThinkerFarm :  Loading Face Details")
+	data = pickle.loads(open("models/face_recognition_models/embeddings.pickle", "rb").read())
 
-	print("AI Edge : encoding labels...")
+	print("ThinkerFarm : encoding labels...")
 	self.T.delete("1.0", tki.END)
-	self.T.insert("1.0","AI Edge : encoding labels..")
+	self.T.insert("1.0","ThinkerFarm : encoding labels..")
 
 	le = LabelEncoder()
 	labels = le.fit_transform(data["names"])
@@ -111,22 +116,20 @@ def train_face_pickle(self):
 	print("labels : ",labels)
 
 	self.T.delete("1.0", tki.END)
-	self.T.insert("1.0","AI Edge : training model..")
+	self.T.insert("1.0","ThinkerFarm : training model..")
 	recognizer = SVC(C=1.0, kernel="linear", probability=True)
 	recognizer.fit(data["embeddings"], labels)
 
-	f = open(os.path.sep.join([self.root_path,"/models/face_recognition_models",
-        "recognizer.pickle"]), "wb")
+	f = open("models/face_recognition_models/recognizer.pickle", "wb")
 	f.write(pickle.dumps(recognizer))
 	f.close()
 
-	f = open(os.path.sep.join([self.root_path,"/models/face_recognition_models",
-        "le.pickle"]), "wb")
+	f = open("models/face_recognition_models/le.pickle", "wb")
 	f.write(pickle.dumps(le))
 	f.close()
 
-	self.top_label_text.set("Well done training Emrefied... :D =)")
-	img = tki.PhotoImage(file=os.path.sep.join([self.root_path, "ui/images/emrefied.png"]))
+	self.top_label_text.set("Well done training finished :D =)")
+	img = ImageTk.PhotoImage(Image.open("ui/images/metallica.png"))
 	self.panel_pass.configure(image=img)
 	self.panel_pass.image = img
 

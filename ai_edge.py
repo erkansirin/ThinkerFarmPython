@@ -2,7 +2,7 @@
 #
 #
 # Author Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm Edge project.
 #
 # ai_edge.py contains init arguments live video stream object from imutils.video
 # and main application loop
@@ -33,7 +33,7 @@ ap.add_argument("-t", "--target", type=int, default=0,
 	help="cpu or intel vpu target selection default 0 is sytem CPU 1 is Intel VPU")
 args = vars(ap.parse_args())
 
-print("AI Edge : Opening camera")
+print("ThinkerFarm : Opening camera")
 
 target = args["target"]
 if target == 2:

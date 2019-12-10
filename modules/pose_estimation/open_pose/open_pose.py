@@ -2,7 +2,7 @@
 #
 #
 # Author Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 # eopen_pose.py is real-time pose detection using COCO, MPI, BODY25 or HAND netowks
 
@@ -18,7 +18,7 @@ from PIL import Image
 from PIL import ImageTk
 import numpy as np
 import time
-from db.db import db
+from db.person_db import person_db
 
 
 class open_pose:
@@ -90,30 +90,26 @@ def load_openpose_network(self):
     self.inHeight = 480
     self.inScale = 0.003922
 
-    print("AI Edge : Loading OpenPose Network")
+    print("ThinkerFarm : Loading OpenPose Network")
     self.T.delete("1.0", tki.END)
-    self.T.insert("1.0","AI Edge : Loading OpenPose Network")
+    self.T.insert("1.0","ThinkerFarm : Loading OpenPose Network")
 
     if self.pose_dataset == 'COCO':
-        protoPathOpenPose = os.path.sep.join([self.root_path,"/models/open_pose_net/pose/coco", "pose_deploy_linevec.prototxt"])
-        modelPathOpenPose = os.path.sep.join([self.root_path,"/models/open_pose_net/pose/coco",
-            "pose_iter_440000.caffemodel"])
+        protoPathOpenPose = "models/open_pose_net/pose/coco/pose_deploy_linevec.prototxt"
+        modelPathOpenPose = "models/open_pose_net/pose/coco/pose_iter_440000.caffemodel"
 
     if self.pose_dataset == 'MPI':
-        protoPathOpenPose = os.path.sep.join([self.root_path,"/models/open_pose_net/pose/mpi", "pose_deploy_linevec_faster_4_stages.prototxt"])
-        modelPathOpenPose = os.path.sep.join([self.root_path,"/models/open_pose_net/pose/mpi",
-            "pose_iter_160000.caffemodel"])
+        protoPathOpenPose = "models/open_pose_net/pose/mpi/pose_deploy_linevec_faster_4_stages.prototxt"
+        modelPathOpenPose = "models/open_pose_net/pose/mpi/pose_iter_160000.caffemodel"
 
     if self.pose_dataset == 'BODY25':
-        protoPathOpenPose = os.path.sep.join([self.root_path,"/models/open_pose_net/pose/body_25", "pose_deploy.prototxt"])
-        modelPathOpenPose = os.path.sep.join([self.root_path,"/models/open_pose_net/pose/body_25",
-            "pose_iter_584000.caffemodel"])
+        protoPathOpenPose = "models/open_pose_net/pose/body_25/pose_deploy.prototxt"
+        modelPathOpenPose = "models/open_pose_net/pose/body_25/pose_iter_584000.caffemodel"
 
 
     if self.pose_dataset == 'HAND':
-        protoPathOpenPose = os.path.sep.join([self.root_path,"/models/open_pose_net/hand", "pose_deploy.prototxt"])
-        modelPathOpenPose = os.path.sep.join([self.root_path,"/models/open_pose_net/hand",
-            "pose_iter_102000.caffemodel"])
+        protoPathOpenPose = "models/open_pose_net/hand/pose_deploy.prototxt"
+        modelPathOpenPose = "models/open_pose_net/hand/pose_iter_102000.caffemodel"
 
 
 
@@ -125,7 +121,7 @@ def load_openpose_network(self):
 
     text = "Show me what you got :D"
     self.top_label_text.set(text)
-    img = tki.PhotoImage(file=os.path.sep.join([self.root_path, "ui/images/poseestima.png"]))
+    img = ImageTk.PhotoImage(Image.open("ui/images/poseestima.png"))
     self.panel_pass.configure(image=img)
     self.panel_pass.image = img
 
@@ -151,10 +147,7 @@ def run_openpose_network(self,frame):
         _, conf, _, point = cv.minMaxLoc(heatMap)
         x = (frameWidth * point[0]) / out.shape[3]
         y = (frameHeight * point[1]) / out.shape[2]
-        print("openpose shape 2 : ",out.shape[2])
-        print("openpose shape 3 : ",out.shape[3])
 
-        print("openpose conf : ",conf)
 
         points.append((int(x), int(y)) if conf > self.pose_confidence else None)
 

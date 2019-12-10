@@ -2,7 +2,7 @@
 #
 #
 # Author Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 # open_pose_ipcam.py is copy of open_pose.py is real-time
 # pose detection using COCO, MPI, BODY25 or HAND netowks on ipcamera
@@ -19,7 +19,7 @@ from PIL import Image
 from PIL import ImageTk
 import numpy as np
 import time
-from db.db import db
+from db.person_db import person_db
 
 def run_openpose_on_ipcam(self,frame):
 

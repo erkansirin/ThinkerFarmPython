@@ -2,7 +2,7 @@
 #
 #
 # Author by Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm Edge project.
 #
 # face_scan scan faces and record images to human dataset folder
 
@@ -16,7 +16,7 @@ from PIL import ImageTk
 import numpy as np
 import time
 import threading
-from db.db import db
+from db.person_db import person_db
 from modules.nn_utility import *
 
 class face_scan:
@@ -29,9 +29,8 @@ def load_scan_detector_face_network(self):
     self.pb.pack(expand=True, fill=tki.BOTH, padx=[200,0])
     self.pb.start()
 
-    protoPath = os.path.sep.join([self.root_path,"/models/face_detection_model", "deploy.prototxt"])
-    modelPath = os.path.sep.join([self.root_path,"/models/face_detection_model",
-        "res10_300x300_ssd_iter_140000.caffemodel"])
+    protoPath = "models/face_detection_model/deploy.prototxt"
+    modelPath = "models/face_detection_model/res10_300x300_ssd_iter_140000.caffemodel"
 
     self.net_scan_utility = nn_utility(self.cpu_type)
     self.net_scan_utility.setup_network(protoPath, modelPath,  "caffe")
@@ -52,7 +51,7 @@ def run_face_scan(self,frame):
         ts = time.time()
 
         self.top_label_text.set("I will take ten image of yours ;)")
-        img = tki.PhotoImage(file=os.path.sep.join([self.root_path, "ui/images/takingPhotos.png"]))
+        img = ImageTk.PhotoImage(Image.open("ui/images/takingPhotos.png"))
         self.panel_pass.configure(image=img)
         self.panel_pass.image = img
 
@@ -100,8 +99,8 @@ def run_face_scan(self,frame):
                 cv2.putText(frame, label3, (10, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0))
 
-                self.top_label_text.set("You are Emrefied ;)")
-                img = tki.PhotoImage(file=os.path.sep.join([self.root_path, "ui/images/emrefied.png"]))
+                self.top_label_text.set("You are good to go ;)")
+                img = ImageTk.PhotoImage(Image.open("ui/images/fistbumb.png"))
                 self.panel_pass.configure(image=img)
                 self.panel_pass.image = img
 
@@ -119,7 +118,7 @@ def run_face_scan(self,frame):
                 tstext= "%d" % ts
                 if self.take_allowed == 1:
                     if self.total_scanned_face > 0:
-                        humanid = "{}/dataset/humans/{}/peopled{}_.jpg".format(self.root_path,self.current_id,tstext)
+                        humanid = "dataset/humans/{}/peopled{}.jpg".format(self.current_id,tstext)
                         cv2.imwrite(humanid, frame)     # save frame as JPEG file
                         print("disk write : ",humanid)
                         self.total_scanned_face -= 1

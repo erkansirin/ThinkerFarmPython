@@ -12,10 +12,10 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 dlib.DLIB_USE_CUDA = True
 
 face_detector = dlib.get_frontal_face_detector()
-pose_predictor_68_point = dlib.shape_predictor(root_path + '/models/dlib/shape_predictor_68_face_landmarks.dat')
-pose_predictor_5_point = dlib.shape_predictor(os.path.sep.join([root_path,"models/dlib","shape_predictor_5_face_landmarks.dat"]))
-cnn_face_detector = dlib.cnn_face_detection_model_v1(os.path.sep.join([root_path,"/models/dlib","mmod_human_face_detector.dat"]))
-face_encoder = dlib.face_recognition_model_v1(root_path + '/models/dlib/dlib_face_recognition_resnet_model_v1.dat')
+pose_predictor_68_point = dlib.shape_predictor('models/dlib/shape_predictor_68_face_landmarks.dat')
+pose_predictor_5_point = dlib.shape_predictor("models/dlib/shape_predictor_5_face_landmarks.dat")
+cnn_face_detector = dlib.cnn_face_detection_model_v1("models/dlib/mmod_human_face_detector.dat")
+face_encoder = dlib.face_recognition_model_v1('models/dlib/dlib_face_recognition_resnet_model_v1.dat')
 
 
 def _rect_to_css(rect):
@@ -207,12 +207,6 @@ def face_encodings(face_image, known_face_locations=None, num_jitters=1):
     """
     raw_landmarks = _raw_face_landmarks(face_image, known_face_locations, model="large")
 
-    #print("face_image : ",face_image)
-
-
-    #for raw_landmark_set in raw_landmarks:
-        #print("raw_landmark_set :",raw_landmark_set)
-        #print("compute_face_descriptor : ",face_encoder.compute_face_descriptor(face_image, raw_landmark_set, num_jitters))
 
     return [np.array(face_encoder.compute_face_descriptor(face_image, raw_landmark_set, num_jitters)) for raw_landmark_set in raw_landmarks]
 
@@ -228,19 +222,11 @@ def compare_faces(known_face_encodings, face_encoding_to_check, tolerance=0.45):
     """
     known_face_encodings_x = np.asarray(known_face_encodings, dtype=np.float64)
     face_encoding_to_check_x = np.asarray(face_encoding_to_check, dtype=np.float64)
-    #known_face_encodings_x = np.array(known_face_encodings, dtype=np.float64)
-    #face_encoding_to_check_x = np.array(face_encoding_to_check, dtype=np.float64)
 
     matches = np.linalg.norm(known_face_encodings - face_encoding_to_check, axis=1)
     min_index = matches.argmin()
     min_value = matches[min_index]
 
-    #print("face_encoding_to_check : ",face_encoding_to_check)
 
-
-    #print("known_face_encodings : ",known_face_encodings)
-    #print("matches : ",matches)
-    #print("min_index : ",min_index)
-    #print("min_value : ",min_value)
 
     return list(face_distance(known_face_encodings, face_encoding_to_check) <= tolerance)

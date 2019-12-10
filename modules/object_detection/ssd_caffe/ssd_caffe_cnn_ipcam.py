@@ -7,7 +7,7 @@ from PIL import Image
 from PIL import ImageTk
 import numpy as np
 import time
-from db.db import db
+from db.person_db import person_db
 
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;0"
 
@@ -23,7 +23,7 @@ def run_ssd_face_cnn_ipcam(self,framex):
     detections = self.detectorCaffe .forward()
     if self.update_final_text == 0:
         self.T.delete("1.0", tki.END)
-        self.T.insert("1.0","System ready - AI Edge Face Module : detection with res10_300x300_ssd_iter_140000.caffemodel and Recognition with custom trained NN with  human dataset runing on OpenCV DNN")
+        self.T.insert("1.0","System ready - ThinkerFarm Face Module : detection with res10_300x300_ssd_iter_140000.caffemodel and Recognition with custom trained NN with human dataset runing on OpenCV DNN")
         self.update_final_text = 1
 
     cols = frame.shape[1]
@@ -73,7 +73,7 @@ def run_ssd_face_cnn_ipcam(self,framex):
     detections = self.net_utility.nn_detector(imageBlobFace)
     if self.update_final_text == 0:
         self.T.delete("1.0", tki.END)
-        self.T.insert("1.0","System ready - AI Edge Face Module : detection with res10_300x300_ssd_iter_140000.caffemodel and Recognition with custom trained NN with  human dataset runing on OpenCV DNN")
+        self.T.insert("1.0","System ready - ThinkerFarm Face Module : detection with res10_300x300_ssd_iter_140000.caffemodel and Recognition with custom trained NN with human dataset runing on OpenCV DNN")
         self.update_final_text = 1
 
     for i in range(0, detections.shape[2]):
@@ -106,9 +106,9 @@ def run_ssd_face_cnn_ipcam(self,framex):
 
                 humanid = "humans/{}/peopled{}_conf_{:.2f}.jpg".format(name,tstext,proba * 100)
 
-                text = "Staff ID : {} - {} ".format(name,db['people'][int(name)]['name'])
+                text = "Staff ID : {} - {} ".format(name,person_db['people'][int(name)]['name'])
                 self.top_label_text.set(text)
-                img = tki.PhotoImage(file=os.path.sep.join([self.root_path, "ui/images/youcanpass.png"]))
+                img = ImageTk.PhotoImage(Image.open("ui/images/youcanpass.png")) 
                 self.panel_pass.configure(image=img)
                 self.panel_pass.image = img
 
@@ -118,7 +118,7 @@ def run_ssd_face_cnn_ipcam(self,framex):
                 cv2.putText(frame, text, (startX, y),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.65, (1, 255, 13), 1)
             else:
-                humanid = "/home/pi/Desktop/ageofai/data/peopled{}_conf_{:.2f}.jpg".format(tstext,proba * 100)
+                humanid = "data/peopled{}_conf_{:.2f}.jpg".format(tstext,proba * 100)
 
                 text = "Staff ID : Unknown"
                 self.top_label_text.set(text)

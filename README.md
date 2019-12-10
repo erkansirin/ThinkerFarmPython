@@ -3,6 +3,9 @@
 ## Introduction   
 This repository contains codes that i used in my previous projects. I gather them together as re-usable python modules in case i needed in the future.
 
+| ![ThinkerFarm Python](https://github.com/erkansirin/ThinkerFarmPython/raw/master/ui/images/screen1.png)   | ![ThinkerFarm Python](https://github.com/erkansirin/ThinkerFarmPython/raw/master/ui/images/screen2.png)  |
+| ------------ | :--------------: |
+
 ## Hardware
 This project developed on Intel Neural Stick 2 (Myriad™ X) and Raspberry Pi 3 B+ Raspbian OS is 32bit, Nvidia Jetson Nano, Intel Up developer kit and for Laptop and Desktop computers if your CPU have AVX instructions (Advanced Vector Extensions) you will get pretty much decent performance in every module. Most of modules are supports GPU by default.  
 
@@ -48,7 +51,7 @@ This project developed on Intel Neural Stick 2 (Myriad™ X) and Raspberry Pi 3 
 
 ```
 $ sudo apt-get update
-``` 
+```
 
 ### Installing BLAS and LAPACK packages  
 

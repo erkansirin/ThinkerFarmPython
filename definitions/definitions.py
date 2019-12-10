@@ -2,7 +2,7 @@
 #
 #
 # Author Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 # definitions.py create for the sake of smaller
 # main app file main_application.py import this class and use objects in it
@@ -20,25 +20,14 @@ def setup_definitions(self, vs, args):
     self.active_menu = -2
     self.vs = vs
     self.active_training = False
-    #self.vcap = cv2.VideoCapture("rtsp://admin:1803Eg15@192.168.2.112:554/onvif1")
-    #ßæself.vcap = capture_threading("rtsp://admin:1803Eg15@192.168.2.112:554/onvif1")
 
-    #public working
-
-    #self.vcap = capture_threading("http://79.108.129.171:9000/mjpg/video.mjpg")
-    #self.vcap = capture_threading("http://213.226.254.135:91/mjpg/video.mjpg")#çek cumhuriyeti
-    self.vcap = capture_threading("http://root:admin@10.0.30.236/mjpg/video.mjpg") #Serbia novi pazar
-    #self.vcap = capture_threading("http://93.41.227.105:81/GetData.cgi?CH=1") #Lombardia, Varese
-
-
-
-
-
+    #self.vcap = capture_threading("rtsp://192.168.2.39:8554/unicast") #use this line if you want to use rtsp stream
+    self.vcap = capture_threading("http://128.206.113.98:80/mjpg/video.mjpg") #uncomment this line if you want to use http stream
 
     self.vcap.start()
 
     self.cpu_type = args["target"]
-    #self.root_path = args["path"]
+    self.root_path = args["path"]
     self.current_id = -1
     self.selected_id = 0
     self.take_allowed = 0
@@ -49,7 +38,7 @@ def setup_definitions(self, vs, args):
 
 
 
-    self.ssd_caffe_confidence = 0.2
+    self.ssd_caffe_confidence = 0.4
     self.face_confidence = 0.35
     self.classifier_confidence = 0.15
 

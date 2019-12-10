@@ -2,7 +2,7 @@
 #
 #
 # Author by Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 #  face_dlib using dlib face recognition module to recognize faces
 
@@ -15,7 +15,7 @@ from PIL import Image
 from PIL import ImageTk
 import numpy as np
 import time
-from db.db import db
+from db.person_db import person_db
 from modules.face_recognition.face_dlib.face_dlib_utility import *
 import dlib
 import datetime
@@ -33,21 +33,19 @@ class fr_with_dlib:
 def load_dlib_face_network(self):
 
     self.T.delete("1.0", tki.END)
-    self.T.insert("1.0","AI Edge : Loading Dlib Face Network")
+    self.T.insert("1.0","ThinkerFarm : Loading Dlib Face Network")
 
-    print("AI Edge : AI Edge : Loading Dlib Face Network")
+    print("ThinkerFarm : ThinkerFarm : Loading Dlib Face Network")
 
     dlib.DLIB_USE_CUDA = True
 
     self.dataEncodings = pickle.loads(open(os.path.sep.join([dlib_encodings]), "rb").read())
     self.active_menu = 2
-    print("AI Edge : Running Face Dlib")
+    print("ThinkerFarm : Running Face Dlib")
 
 
 
 def run_face_dlib(self,frame):
-
-    #frame = imutils.resize(framex, width=525,height=480)
 
     grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     rgb = cv2.cvtColor(grayscale, cv2.COLOR_GRAY2RGB)
@@ -106,14 +104,11 @@ def run_face_dlib(self,frame):
                       "accept": "*/*"}
             postdata = { 'cameraId': '2', 'image': '', 'date':date_time }
 
-            #r = requests.post(url = 'http://139.162.142.162:1994/api/companies/1/employees/%s/passing'%name, data = json.dumps(postdata), headers=header)
-            #pastebin_url = r.text
-            #print("The pastebin URL is : ",pastebin_url)
 
 
         print("found person : ",text)
         self.top_label_text.set(text)
-        img = tki.PhotoImage(file=os.path.sep.join([self.root_path, "ui/images/youcanpass.png"]))
+        img = ImageTk.PhotoImage(Image.open("ui/images/youcanpass.png"))
         self.panel_pass.configure(image=img)
         self.panel_pass.image = img
 
@@ -126,9 +121,7 @@ def run_face_dlib(self,frame):
 def run_face_dlib_backend(frame):
     print("running dlib")
 
-    root_path = "/home/pi/Desktop/edge-local"
-
-    dataEncodings = pickle.loads(open(os.path.sep.join([root_path,"/models/face_recognition_models","encodings.pickle"]), "rb").read())
+    dataEncodings = pickle.loads(open("models/face_recognition_models","encodings.pickle", "rb").read())
 
     (h, w) = frame.shape[:2]
 

@@ -2,16 +2,17 @@
 #
 #
 # Author Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 # init_buttons.py contains button objects for mainloop
 
-from db.db import db
+from db.person_db import person_db
 import os
 from tkinter import Text
 from tkinter import messagebox
 from tkinter import ttk
-
+from PIL import Image
+from PIL import ImageTk
 
 def init_buttons(self, tki):
 
@@ -49,10 +50,6 @@ def init_buttons(self, tki):
     self.pose_estimation_button = tki.Button(self.button_frame, text="Pose Estimation", height = 2, width =20, command = self.open_pose_estimation, font = ('Comic Sans MS',15),
     bg = 'SkyBlue3', fg = 'white', anchor='center')
     self.pose_estimation_button.pack(side=tki.TOP, padx=[0,0])
-
-    self.gans_button = tki.Button(self.button_frame, text="GANs", height = 2, width =20, command = self.open_gans_main, font = ('Comic Sans MS',15),
-    bg = 'SkyBlue3', fg = 'white', anchor='center')
-    self.gans_button.pack(side=tki.TOP, padx=[0,0])
 
     self.training_button = tki.Button(self.button_frame, text="Training", height = 2, width =20, command = self.open_training_menu, font = ('Comic Sans MS',15),
     bg = 'SkyBlue3', fg = 'white', anchor='center')
@@ -142,30 +139,14 @@ def init_buttons(self, tki):
     self.posenet_mpi_button = tki.Button(self.posenet_button_frame, text="OpenPose MPI", height = 2, width = 20, command = self.start_posenet_mpi, font = ('Comic Sans MS',15),
     bg = 'DarkOrange1', fg = 'white', anchor='center')
     self.posenet_mpi_button.pack(side=tki.TOP, padx=[0,0])
-
-    self.posenet_mpi_ipcam_button = tki.Button(self.posenet_button_frame, text="OpenPose MPI IPCam", height = 2, width = 20, command = self.start_posenet_mpi_ipcam, font = ('Comic Sans MS',15),
-    bg = 'DarkOrange1', fg = 'white', anchor='center')
-    self.posenet_mpi_ipcam_button.pack(side=tki.TOP, padx=[0,0])
-
+    
     self.posenet_body_button = tki.Button(self.posenet_button_frame, text="OpenPose BODY25 DNN", height = 2, width = 20, command = self.start_posenet_body, font = ('Comic Sans MS',15),
     bg = 'DarkOrange1', fg = 'white', anchor='center')
     self.posenet_body_button.pack(side=tki.TOP, padx=[0,0])
 
-    self.posenet_hand_button = tki.Button(self.posenet_button_frame, text="OpenPose HAND", height = 2, width = 20, command = self.start_posenet_hand, font = ('Comic Sans MS',15),
-    bg = 'DarkOrange1', fg = 'white', anchor='center')
-    self.posenet_hand_button.pack(side=tki.TOP, padx=[0,0])
-
     self.edge_detection_button = tki.Button(self.posenet_button_frame, text="Edge Detection", height = 2, width = 20, command = self.start_edge_detection, font = ('Comic Sans MS',15),
     bg = 'DarkOrange1', fg = 'white', anchor='center')
     self.edge_detection_button.pack(side=tki.TOP, padx=[0,0])
-
-    self.posenet_mpi_ssd_button = tki.Button(self.posenet_button_frame, text="OpenPose MPI+SSD", height = 2, width = 20, command = self.start_posenet_mpi_with_ssd, font = ('Comic Sans MS',15),
-    bg = 'DarkOrange1', fg = 'white', anchor='center')
-    self.posenet_mpi_ssd_button.pack(side=tki.TOP, padx=[0,0])
-
-    self.poseTensorflowButton = tki.Button(self.posenet_button_frame, text="PoseNet Tensorflow", height = 2, width = 20, command = self.callPoseTensor, font = ('Comic Sans MS',15),
-    bg = 'DarkOrange1', fg = 'white', anchor='center')
-    self.poseTensorflowButton.pack(side=tki.TOP, padx=[0,0])
 
     self.face_implementation_button_frame = tki.Frame(self.main_button_frame)
     self.face_implementation_button_frame.columnconfigure(0, weight=1)
@@ -176,7 +157,7 @@ def init_buttons(self, tki):
     bg = 'chartreuse3', fg = 'white', anchor='center')
     self.face_implementation_back_button.pack(side=tki.TOP, padx=[0,0])
 
-    self.face_pickle_button = tki.Button(self.face_implementation_button_frame, text="Face Recognition Pickle", height = 2, width = 20, command = self.start_face_pickle, font = ('Comic Sans MS',15),
+    self.face_pickle_button = tki.Button(self.face_implementation_button_frame, text="Face Recognition Openface", height = 2, width = 20, command = self.start_face_pickle, font = ('Comic Sans MS',15),
     bg = 'chartreuse3', fg = 'white', anchor='center')
     self.face_pickle_button.pack(side=tki.TOP, padx=[0,0])
 
@@ -184,22 +165,14 @@ def init_buttons(self, tki):
     bg = 'chartreuse3', fg = 'white', anchor='center')
     self.face_dlib_button.pack(side=tki.TOP, padx=[0,0])
 
-    self.face_dlib_dnn_button = tki.Button(self.face_implementation_button_frame, text="Face Dlib+CNN", height = 2, width = 20, command = self.start_face_dlib_ssd, font = ('Comic Sans MS',15),
-    bg = 'red2', fg = 'white', anchor='center')
-    self.face_dlib_dnn_button.pack(side=tki.TOP, padx=[0,0])
-
     self.face_dlib_ipcam_button = tki.Button(self.face_implementation_button_frame, text="Face Dlib+IPCam", height = 2, width = 20, command = self.start_face_dlib_ipcam, font = ('Comic Sans MS',15),
     bg = 'red2', fg = 'white', anchor='center')
     self.face_dlib_ipcam_button.pack(side=tki.TOP, padx=[0,0])
 
-    self.face_pickle_ipcam_button = tki.Button(self.face_implementation_button_frame, text="Face Pickle+IPCam", height = 2, width = 20, command = self.start_face_pickle_ipcam, font = ('Comic Sans MS',15),
+    self.face_pickle_ipcam_button = tki.Button(self.face_implementation_button_frame, text="Face Openface+IPCam", height = 2, width = 20, command = self.start_face_pickle_ipcam, font = ('Comic Sans MS',15),
     bg = 'red2', fg = 'white', anchor='center')
     self.face_pickle_ipcam_button.pack(side=tki.TOP, padx=[0,0])
 
-
-    self.face_pickle_twocam_button = tki.Button(self.face_implementation_button_frame, text="Face Two Cam NoView", height = 2, width = 20, command = self.start_face_twocam_noview, font = ('Comic Sans MS',15),
-    bg = 'red2', fg = 'white', anchor='center')
-    self.face_pickle_twocam_button.pack(side=tki.TOP, padx=[0,0])
 
     self.scan_menu_button_frame = tki.Frame(self.main_button_frame)
     self.scan_menu_button_frame.columnconfigure(0, weight=1)
@@ -217,18 +190,18 @@ def init_buttons(self, tki):
     self.list_box_frame.configure(bg='white')
 
     self.menu_scroll_bar = tki.Scrollbar(self.list_box_frame)
-    self.list = tki.Listbox(self.list_box_frame, height = 13, font = ('Comic Sans MS',15), yscrollcommand = self.menu_scroll_bar.set )
-    for line in range(len(db['people'])):
-        self.list.insert(tki.END, db['people'][int(line)]['name'])
-        self.list.itemconfig("end", bg = "chartreuse4")
+    self.farm_list = tki.Listbox(self.list_box_frame, height = 13, font = ('Comic Sans MS',15), yscrollcommand = self.menu_scroll_bar.set )
+    for line in range(len(person_db['people'])):
+        self.farm_list.insert(tki.END, person_db['people'][int(line)]['name'])
+        self.farm_list.itemconfig("end", bg = "chartreuse4")
 
-    self.list.bind('<<ListboxSelect>>', self.list_item_selected)
+    self.farm_list.bind('<<ListboxSelect>>', self.list_item_selected)
 
     self.menu_scroll_bar.pack( side = tki.RIGHT, fill = tki.Y )
 
-    self.list.pack( side = tki.TOP, fill = tki.Y )
+    self.farm_list.pack( side = tki.TOP, fill = tki.Y )
 
-    self.menu_scroll_bar.config( command = self.list.yview )
+    self.menu_scroll_bar.config( command = self.farm_list.yview )
 
     self.scan_back_button = tki.Button(self.scan_menu_button_frame, text="Start Scan", height = 2, width = 20, command = self.start_scan, font = ('Comic Sans MS',15),
     bg = 'chartreuse3', fg = 'white', anchor='center')
@@ -240,21 +213,21 @@ def init_buttons(self, tki):
 
     self.T = tki.Text(self.bottom_status_frame, height=3, width=30)
     self.T.pack(side=tki.RIGHT, fill=tki.X, expand="yes", padx=0, pady=0)
-    self.T.insert("1.0","System ready - AI Edge Face Module : detection with res10_300x300_ssd_iter_140000.caffemodel and Recognition with custom trained NN with ICT human dataset runing on OpenCV DNN")
+    self.T.insert("1.0","System ready - ThinkerFarm Face Module : detection with res10_300x300_ssd_iter_140000.caffemodel and Recognition with custom trained NN with human dataset runing on OpenCV DNN")
 
-    # imgLogo = tki.PhotoImage(file = os.path.sep.join([self.root_path, "ui/images/ailogoflat.png"]))
-    # self.logo = tki.Label(self.bottom_status_frame,image=imgLogo)
-    # self.logo.image = imgLogo
-    # self.logo.pack(side="left", padx=0, pady=0)
+    imgThinkerLogo = ImageTk.PhotoImage(Image.open("ui/images/thinkerfarmlogoflat.png"))
+    self.thinker_logo = tki.Label(self.bottom_status_frame,image=imgThinkerLogo)
+    self.thinker_logo.image = imgThinkerLogo
+    self.thinker_logo.pack(side="left", padx=0, pady=0)
 
     self.top_status_frame = tki.Frame(self.root)
     self.top_status_frame.pack(side=tki.TOP, fill=tki.X)
     self.top_status_frame.configure(bg='white')
 
-    # img = tki.PhotoImage(file=os.path.sep.join([self.root_path, "ui/images/system_ready.png"]))
-    # self.panel_pass = tki.Label(self.top_status_frame,image=img)
-    # self.panel_pass.image = img
-    # self.panel_pass.pack(side="left", padx=0, pady=0)
+    img = ImageTk.PhotoImage(Image.open("ui/images/system_ready.png"))
+    self.panel_pass = tki.Label(self.top_status_frame,image=img)
+    self.panel_pass.image = img
+    self.panel_pass.pack(side="left", padx=0, pady=0)
 
     self.minimize_button = tki.Button(self.top_status_frame, text="Minimize", height = 2, width = 6, command = self.minimize_window, font = ('Comic Sans MS',15),
     bg = 'white', fg = 'black', anchor='center')

@@ -2,7 +2,7 @@
 #
 #
 # Author Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm Edge project.
 #
 # main_application.py is main application structure class
 
@@ -33,7 +33,7 @@ class main_application:
         if self.cpu_type == 2:
             self.top_label_cpu_text.set("GPU")
 
-        self.root.wm_title("AI Edge")
+        self.root.wm_title("ThinkerFarm")
         self.root.wm_protocol("WM_DELETE_WINDOW", self.on_close)
         print("cuda list :",cuda.get_num_devices())
 
@@ -161,7 +161,7 @@ class main_application:
 
     def open_main_view(self):
         self.vs.start()
-        print("AI Edge : Main Menu Starting Video Stream")
+        print("ThinkerFarm : Main Menu Starting Video Stream")
         #time.sleep(5.0)
 
         self.stop_event = threading.Event()
@@ -332,11 +332,6 @@ class main_application:
         self.thread_count.start()
 
 
-
-
-
-
-#
     def start_scan(self):
 
         self.current_id = self.selected_id
@@ -375,7 +370,7 @@ class main_application:
 
     def open_main_view(self):
         self.vs.start()
-        print("AI Edge : Starting Video Stream")
+        print("ThinkerFarm : Starting Video Stream")
         time.sleep(5.0)
         self.stop_event = threading.Event()
         self.thread = threading.Thread(target=self.video_loop, args=())

@@ -2,7 +2,7 @@
 #
 #
 # Author Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 # ssd_yolo.py contains loader and runnder for Tiny Yolo object detection network
 
@@ -15,7 +15,7 @@ from PIL import Image
 from PIL import ImageTk
 import numpy as np
 import time
-from db.db import db
+from db.person_db import person_db
 
 class ssd_yolo:
 
@@ -24,18 +24,18 @@ class ssd_yolo:
 
 def load_ssd_yolo_network(self):
 
-    labelsPath = os.path.sep.join([self.root_path,"/models/object_detection/yolo-coco", "coco.names"])
+    labelsPath = "models/object_detection/yolo-coco/coco.names"
     self.LABELS = open(labelsPath).read().strip().split("\n")
 
     np.random.seed(42)
     COLORS = np.random.randint(0, 255, size=(len(self.LABELS), 3),
     dtype="uint8")
-    weightsPath = os.path.sep.join([self.root_path,"models/object_detection/yolo-coco", "yolov3-spp.weights"])
-    configPath = os.path.sep.join([self.root_path,"models/object_detection/yolo-coco", "yolov3-spp.cfg"])
+    weightsPath = "models/object_detection/yolo-coco/yolov3-spp.weights"
+    configPath = "models/object_detection/yolo-coco/yolov3-spp.cfg"
 
-    print("AI Edge : Loading Yolo Network")
+    print("ThinkerFarm : Loading Yolo Network")
     self.T.delete("1.0", tki.END)
-    self.T.insert("1.0","AI Edge : Loading Yolo Network")
+    self.T.insert("1.0","ThinkerFarm : Loading Yolo Network")
 
     self.net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
     if self.cpu_type == 0:

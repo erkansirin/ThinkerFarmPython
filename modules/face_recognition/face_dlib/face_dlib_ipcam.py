@@ -2,7 +2,7 @@
 #
 #
 # Author by Erkan SIRIN
-# Created for AI Edge project.
+# Created for ThinkerFarm project.
 #
 #  face_dlib using dlib face recognition module to recognize faces
 
@@ -15,7 +15,7 @@ from PIL import Image
 from PIL import ImageTk
 import numpy as np
 import time
-from db.db import db
+from db.person_db import person_db
 from modules.face_recognition.face_dlib.face_dlib_utility import *
 import dlib
 
@@ -28,24 +28,22 @@ class face_dlib_ipcam:
 def load_dlib_face_network_ipcam(self):
 
     self.T.delete("1.0", tki.END)
-    self.T.insert("1.0","AI Edge : Loading Dlib Face Network")
+    self.T.insert("1.0","ThinkerFarm : Loading Dlib Face Network")
 
-    print("AI Edge :AI Edge : Loading Dlib Face Network")
+    print("ThinkerFarm : ThinkerFarm : Loading Dlib Face Network")
 
     dlib.DLIB_USE_CUDA
 
-    self.dataEncodings = pickle.loads(open(os.path.sep.join([self.root_path,"/models/face_recognition_models","encodings.pickle"]), "rb").read())
+    self.dataEncodings = pickle.loads(open("models/face_recognition_models/encodings.pickle", "rb").read())
     self.active_menu = 13
-    print("AI Edge : Running Face Dlib")
+    print("ThinkerFarm : Running Face Dlib")
 
 
 def run_face_dlib_ipcam(self,framex):
-    #print("running dlib")
 
     frame = imutils.resize(framex, width=525,height=480)
     (h, w) = frame.shape[:2]
 
-    #rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     rgb = frame[:, :, ::-1]
 
     boxes = face_locations(rgb, model="hog")
@@ -79,19 +77,19 @@ def run_face_dlib_ipcam(self,framex):
             text = "Staff ID : Unknown"
             ts = time.time()
             tstext= "%d" % ts
-            humanid = "{}/dataset/unknown/{}_{}_.jpg".format(self.root_path,text,tstext)
+            humanid = "dataset/unknown/{}_{}_.jpg".format(text,tstext)
             cv2.imwrite(humanid, frame)
         else:
             ts = time.time()
             tstext= "%d" % ts
-            text = "Staff ID : {} - {} ".format(name,db['people'][int(name)]['name'])
-            humanid = "{}/dataset/known/{}_{}_.jpg".format(self.root_path,text,tstext)
+            text = "Staff ID : {} - {} ".format(name,person_db['people'][int(name)]['name'])
+            humanid = "dataset/known/{}_{}_.jpg".format(text,tstext)
             cv2.imwrite(humanid, frame)
 
 
         print("found person : ",text)
         self.top_label_text.set(text)
-        img = tki.PhotoImage(file=os.path.sep.join([self.root_path, "ui/images/youcanpass.png"]))
+        img = ImageTk.PhotoImage(Image.open("ui/images/youcanpass.png"))
         self.panel_pass.configure(image=img)
         self.panel_pass.image = img
 
